@@ -31,8 +31,8 @@ export function withState(WrappedGrid) {
         }
 
         handleDataStateChange = (changeEvent) => {
-            this.setState({ dataState: changeEvent.data });
-            this.fetchData(changeEvent.data);
+            this.setState({ dataState: changeEvent.dataState });
+            this.fetchData(changeEvent.dataState);
         }
 
         fetchData(dataState) {
