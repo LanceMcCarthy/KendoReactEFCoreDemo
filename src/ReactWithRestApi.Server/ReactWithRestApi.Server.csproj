@@ -7,6 +7,7 @@
     <SpaRoot>..\reactwithrestapi.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:5281</SpaProxyServerUrl>
+    <UserSecretsId>f5c60360-d89b-4db8-a7c0-a536800cd690</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
