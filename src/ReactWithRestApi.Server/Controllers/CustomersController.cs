@@ -19,42 +19,68 @@ namespace ReactWithRestApi.Server.Controllers;
 public class CustomersController(LanceDbContext dbContext) : ControllerBase
 {
     // GET: api/customers
+    // Important: the Kendo Grid's toDataSourceRequest() will automatically format the query string for you, including filtering, sorting, grouping and more!
     [HttpGet]
-    public async Task<JsonResult> GetCustomers([DataSourceRequest] DataSourceRequest request)
+    public async Task<IActionResult> GetCustomers([DataSourceRequest] DataSourceRequest request)
     {
-        // The special trick is that you can take advantage of the Telerik UI for ASP.NET Core's DataSourceRequest and DataSourceResult
-        // it internally knows how to handle the sorting, paging and other important things that are needed to communicate the right dat aback to the front end.
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            // The special trick is that you can take advantage of the Telerik UI for ASP.NET Core's DataSourceRequest and DataSourceResult
+            // it internally knows how to handle the sorting, paging and other important things that are needed to communicate the right data back to the front end.
+            var result = await dbContext.Customers.ToDataSourceResultAsync(request);
+            return new JsonResult(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     // POST: api/customers
     [HttpPost]
-    public async Task<JsonResult> AddCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    public async Task<IActionResult> AddCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Add(customer);
-        
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            dbContext.Customers.Add(customer);
+
+            return new JsonResult(await dbContext.Customers.ToDataSourceResultAsync(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     // PUT: api/customers
     [HttpPut]
-    public async Task<JsonResult> UpdateCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    public async Task<IActionResult> UpdateCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Update(customer);
+        try
+        {
+            dbContext.Customers.Update(customer);
 
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+            return new JsonResult(await dbContext.Customers.ToDataSourceResultAsync(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     // DELETE: api/customers
     [HttpDelete]
-    public async Task<JsonResult> DeleteCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    public async Task<IActionResult> DeleteCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Remove(customer);
-        
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            dbContext.Customers.Remove(customer);
+
+            return new JsonResult(await dbContext.Customers.ToDataSourceResultAsync(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
