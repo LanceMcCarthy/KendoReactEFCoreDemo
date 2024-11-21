@@ -1,11 +1,11 @@
 import React from 'react';
 import { toDataSourceRequestString, translateDataSourceResultGroups } from '@progress/kendo-data-query';
 
-export function withState(WrappedGrid) {
+export function withState(WrappedGrid, base_url) {
     return class StatefullGrid extends React.Component {
         constructor(props) {
             super(props);
-            this.state = { dataState: { skip: 0, take: 20 } };
+            this.state = { dataState: { skip: 0, take: 10 } };
         }
 
         render() {
@@ -35,14 +35,14 @@ export function withState(WrappedGrid) {
             this.fetchData(changeEvent.dataState);
         }
 
+        // R_EAD
+
         fetchData(dataState) {
             const queryStr = `${toDataSourceRequestString(dataState)}`; // Serialize the state.
             const hasGroups = dataState.group && dataState.group.length;
 
-            const base_url = 'https://localhost:7241/api/customers';
-            const init = { method: 'GET', accept: 'application/json', headers: {} };
-
-            fetch(`${base_url}?${queryStr}`, init)
+            fetch(`${base_url}?${queryStr}`,
+                { method: 'GET', accept: 'application/json', headers: {} })
                 .then(response => response.json())
                 .then(({ data, total }) => {
                     this.setState({

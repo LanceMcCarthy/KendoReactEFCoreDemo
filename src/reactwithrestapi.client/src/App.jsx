@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
+import { Grid, GridColumn as Column, GridToolbar } from '@progress/kendo-react-grid';
+import { Button } from '@progress/kendo-react-buttons';
 
 import { withState } from './GridWithState.jsx';
+import { CommandCell } from './my-command-cell.jsx';
 
-const StatefullGrid = withState(Grid);
+const StatefullGrid = withState(Grid, 'https://localhost:7241/api/customers');
 
 const App = () => {
-    //const [customers, setCustomers] = useState([]);
-    //useEffect(() => {
-    //    fetch('https://localhost:7241/api/customers')
-    //        .then((response) => response.json())
-    //        .then(setCustomers);
-    //}, []);
 
     return (
         <div>
             <StatefullGrid>
+                <GridToolbar>
+                    <Button title="Add new" themeColor={'primary'}>
+                        Add new
+                    </Button>
+                </GridToolbar>
                 <Column field="firstName" title="First" />
                 <Column field="lastName" title="Last" />
                 <Column field="phone" title="Phone" />
@@ -24,6 +24,16 @@ const App = () => {
                 <Column field="city" title="City" />
                 <Column field="state" title="State" />
                 <Column field="zipCode" title="ZIP Code" />
+                <Column
+                    groupable={false}
+                    sortable={false}
+                    filterable={false}
+                    resizable={false}
+                    field="_command"
+                    title=" "
+                    width="180px"
+                    cell={CommandCell}
+                />
             </StatefullGrid>
         </div>
     );
