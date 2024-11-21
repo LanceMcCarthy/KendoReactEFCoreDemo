@@ -28,9 +28,8 @@ const App = () => {
         // let newItems = getItems();
 
         // New code,  we need to start  off with a default Kendo DataSourceRequest object
-        let newItems = getItems({ dataState: { skip: 0, take: 10 } });
-
-        setData(newItems);
+        setData({ dataState: { skip: 0, take: 10 } });
+        getItems(data.dataState);
     }, []);
 
 
@@ -59,7 +58,7 @@ const App = () => {
         
         // Real REST API call
         const queryStr = this.serialize(dataItem);
-        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(this.state.dataState)}`,
+        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(data.dataState)}`,
             { method: 'DELETE', accept: 'application/json', headers: { 'Content-Type': 'application/json' } })
             .then(response => response.json())
             .then(json => setData({ result: json.data }))
@@ -73,7 +72,7 @@ const App = () => {
 
         // Real REST API call
         const queryStr = this.serialize(dataItem);
-        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(this.state.dataState)}`,
+        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(data.dataState)}`,
             { method: 'POST', accept: 'application/json', headers: { 'Content-Type': 'application/json' } })
             .then(response => response.json())
             .then(json => setData({ data: json.data }));
@@ -86,7 +85,7 @@ const App = () => {
 
         // Real REST API call
         const queryStr = this.serialize(item);
-        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(this.state.dataState)}`,
+        fetch(`${base_url}?${queryStr}&${toDataSourceRequestString(data.dataState)}`,
             { method: 'PUT', accept: 'application/json', headers: { 'Content-Type': 'application/json' } })
             .then(response => response.json())
             .then(json => setData({ result: json.data }))
@@ -96,6 +95,8 @@ const App = () => {
 
 
     // ********** GRID STATE (start) ********** //
+    // TODO 
+    // Why are we doing manual operations when the KendoDataSource object should be handling this automatically?
 
     const discard = () => {
         const newData = [...data];
