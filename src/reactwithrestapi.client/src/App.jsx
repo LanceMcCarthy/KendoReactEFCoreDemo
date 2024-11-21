@@ -1,21 +1,24 @@
-import { Grid, GridColumn as Column, GridToolbar } from '@progress/kendo-react-grid';
+import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { Button } from '@progress/kendo-react-buttons';
 
 import { withState } from './GridWithState.jsx';
 import { CommandCell } from './my-command-cell.jsx';
 
-const StatefullGrid = withState(Grid, 'https://localhost:7241/api/customers');
+const StatefullGrid = withState(Grid, 'https://localhost:7241/api/customers', Button);
 
 const App = () => {
 
     return (
         <div>
-            <StatefullGrid>
-                <GridToolbar>
-                    <Button title="Add new" themeColor={'primary'}>
-                        Add new
-                    </Button>
-                </GridToolbar>
+            <StatefullGrid
+                filterable
+                sortlable
+                pageable
+                pageSize={10}
+                reorderable
+                resizable
+                editField="inEdit"
+            >
                 <Column field="firstName" title="First" />
                 <Column field="lastName" title="Last" />
                 <Column field="phone" title="Phone" />
