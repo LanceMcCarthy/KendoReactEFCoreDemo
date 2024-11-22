@@ -43,7 +43,7 @@ const App = () => {
     setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
-        item.customerId === dataItem.customerId ? { ...item, inEdit: true } : item
+        item.id === dataItem.id ? { ...item, inEdit: true } : item
       ),
     }));
   };
@@ -52,7 +52,7 @@ const App = () => {
     setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
-        item.customerId === event.dataItem.customerId
+        item.id === event.dataItem.id
           ? { ...item, [event.field || ""]: event.value }
           : item
       ),
@@ -60,7 +60,7 @@ const App = () => {
   };
 
   const update = (dataItem) => {
-    fetch(`${base_url}/${dataItem.customerId}`, {
+    fetch(`${base_url}/${dataItem.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataItem),
@@ -69,7 +69,7 @@ const App = () => {
         setState((prev) => ({
           ...prev,
           data: prev.data.map((item) =>
-            item.customerId === dataItem.customerId ? { ...dataItem, inEdit: false } : item
+            item.id === dataItem.id ? { ...dataItem, inEdit: false } : item
           ),
         }));
       })
@@ -80,7 +80,7 @@ const App = () => {
     setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
-        item.customerId === dataItem.customerId ? { ...item, inEdit: false } : item
+        item.id === dataItem.id ? { ...item, inEdit: false } : item
       ),
     }));
   };
@@ -116,9 +116,10 @@ const App = () => {
           Add New
         </Button>
       </GridToolbar>
-      <Column field="customerId" title="ID" editable={false} width="50px" />
-      <Column field="firstName" title="First Name" editable={true}/>
-      <Column field="lastName" title="Last Name" editable={true} />
+      <Column field="id" title="ID" editable={false} width="50px" />
+      <Column field="name" title="Name" editable={true}/>
+      <Column field="age" title="Age" editable={true} />
+      <Column field="dateOfBirth" title="DOB" editable={true} />
       <Column
         cell={(props) => <MyCommandCell {...props} {...commandCellProps} />}
         width="200px"
