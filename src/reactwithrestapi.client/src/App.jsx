@@ -117,8 +117,8 @@ const App = () => {
         </Button>
       </GridToolbar>
       <Column field="customerId" title="ID" editable={false} width="50px" />
-      <Column field="firstName" title="First Name" editable={true} width="200px" />
-      <Column field="lastName" title="Last Name" editable={true} width="200px" />
+      <Column field="firstName" title="First Name" editable={true}/>
+      <Column field="lastName" title="Last Name" editable={true} />
       <Column
         cell={(props) => <MyCommandCell {...props} {...commandCellProps} />}
         width="200px"
