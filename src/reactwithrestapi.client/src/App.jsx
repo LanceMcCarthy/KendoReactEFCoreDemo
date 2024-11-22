@@ -98,7 +98,7 @@ const App = () => {
 
   return (
     <Grid
-      style={{ height: "420px", width: "700px" }}
+      style={{  }}
       data={state.data}
       total={state.total}
       skip={state.dataState.skip}
@@ -121,9 +121,9 @@ const App = () => {
         </Button>
       </GridToolbar>
       <Column field="id" title="ID" editable={false} width="50px" />
-          <Column field="name" title="Name" editable={true} width="200px" />
-          <Column field="age" title="Age" editable={true} width="100px" />
-          <Column field="dateOfBirth" title="Date of Birth" format="{0:d}" editable={true} width="180px" filter="date" />
+          <Column field="name" title="Name" editable={true} />
+          <Column field="age" title="Age" editable={true}  />
+          <Column field="dateOfBirth" title="Date of Birth" format="{0:M}" editable={true} filter="date" />
       <Column
         cell={(props) => <MyCommandCell {...props} {...commandCellProps} />}
         width="150px"
