@@ -399,6 +399,6 @@ FodyWeavers.xsd
 
 
 # Database files
-/**/*.db-shm
-/**/*.db-wal
-/**/*.db
+src/ReactWithRestApi.Server/Sales.db-wal
+src/ReactWithRestApi.Server/Sales.db-shm
+src/ReactWithRestApi.Server/Sales/*.db
