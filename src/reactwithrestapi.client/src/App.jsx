@@ -16,7 +16,7 @@ const App = () => {
   const base_url = "https://localhost:7241/api/Customers";
 
   React.useEffect(() => {
-    console.log("Initial State:", state);
+    // console.log("Initial State:", state);
     getItems(state.dataState);
   }, []);
 
@@ -29,11 +29,9 @@ const App = () => {
       .then((response) => response.json())
       .then((responseBody) => {
           const { data: responseData = [], total = 0 } = responseBody || {};
-          console.log("Hi", responseData);
           responseData.forEach((item) => {
               var dob = item.dateOfBirth.split(/\D+/);
               item.dateOfBirth = new Date(dob[0], dob[1], dob[2]);
-              console.log(dob, item.dateOfBirth);
           })
         setState((prev) => ({
           ...prev,
