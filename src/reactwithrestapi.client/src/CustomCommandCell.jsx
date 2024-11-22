@@ -7,18 +7,10 @@ export const MyCommandCell = (props) => {
 
   return (
     <td className="k-command-cell">
-      <Button
-        themeColor={"primary"}
-        onClick={() =>
-          inEdit ? props.update(dataItem) : props.edit(dataItem)
-        }
-      >
+      <Button themeColor={"primary"} onClick={() => inEdit ? props.update(dataItem) : props.edit(dataItem) } >
         {inEdit ? "Update" : "Edit"}
       </Button>
-      <Button
-        themeColor={"primary"}
-        onClick={() => props.cancel(dataItem)}
-      >
+      <Button themeColor={"primary"} onClick={() => props.cancel(dataItem)} >
         {inEdit ? "Cancel" : "Remove"}
       </Button>
     </td>

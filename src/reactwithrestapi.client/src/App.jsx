@@ -2,22 +2,22 @@ import * as React from "react";
 import { toDataSourceRequestString } from "@progress/kendo-data-query";
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import { Button } from "@progress/kendo-react-buttons";
-import { MyCommandCell } from "./gd-myCommandCell.jsx";
+import { MyCommandCell } from "./CustomCommandCell.jsx";
 
 const editField = "inEdit";
 
 const App = () => {
-  const [data, setData] = React.useState({
+  const [state, setState] = React.useState({
     data: [],
     total: 0,
     dataState: { skip: 0, take: 10, filter: null, sort: null, group: [] },
   });
 
-  const base_url = "http://10.248.7.184:8181/api/Customers";
+  const base_url = "https://localhost:7241/api/Customers";
 
   React.useEffect(() => {
-    console.log("Initial State:", data);
-    getItems(data.dataState);
+    console.log("Initial State:", state);
+    getItems(state.dataState);
   }, []);
 
   const getItems = (dataState) => {
@@ -29,7 +29,7 @@ const App = () => {
       .then((response) => response.json())
       .then((responseBody) => {
         const { data: responseData = [], total = 0 } = responseBody || {};
-        setData((prev) => ({
+        setState((prev) => ({
           ...prev,
           data: responseData,
           total: total,
@@ -40,7 +40,7 @@ const App = () => {
   };
 
   const enterEdit = (dataItem) => {
-    setData((prev) => ({
+    setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
         item.customerId === dataItem.customerId ? { ...item, inEdit: true } : item
@@ -49,7 +49,7 @@ const App = () => {
   };
 
   const itemChange = (event) => {
-    setData((prev) => ({
+    setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
         item.customerId === event.dataItem.customerId
@@ -66,7 +66,7 @@ const App = () => {
       body: JSON.stringify(dataItem),
     })
       .then(() => {
-        setData((prev) => ({
+        setState((prev) => ({
           ...prev,
           data: prev.data.map((item) =>
             item.customerId === dataItem.customerId ? { ...dataItem, inEdit: false } : item
@@ -77,7 +77,7 @@ const App = () => {
   };
 
   const cancel = (dataItem) => {
-    setData((prev) => ({
+    setState((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
         item.customerId === dataItem.customerId ? { ...item, inEdit: false } : item
@@ -95,17 +95,17 @@ const App = () => {
   return (
     <Grid
       style={{ height: "420px" }}
-      data={data.data}
-      total={data.total}
-      skip={data.dataState.skip}
-      pageSize={data.dataState.take}
-      filter={data.dataState.filter}
-      sort={data.dataState.sort}
+      data={state.data}
+      total={state.total}
+      skip={state.dataState.skip}
+      pageSize={state.dataState.take}
+      filter={state.dataState.filter}
+      sort={state.dataState.sort}
       pageable
       sortable
       filterable
       onDataStateChange={(e) => {
-        setData((prev) => ({ ...prev, dataState: e.dataState }));
+        setState((prev) => ({ ...prev, dataState: e.dataState }));
         getItems(e.dataState);
       }}
       onItemChange={itemChange}
