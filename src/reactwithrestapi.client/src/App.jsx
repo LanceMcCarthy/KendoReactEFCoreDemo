@@ -62,7 +62,7 @@ const App = () => {
   };
   const update = (dataItem) => {
     console.log("Updating item:", dataItem);
-    fetch(`${base_url}/${dataItem.ProductID}`, {
+    fetch(`${base_url}/${dataItem.customerId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dataItem),
@@ -75,7 +75,7 @@ const App = () => {
   };
   const remove = (dataItem) => {
     console.log("Removing item:", dataItem);
-    fetch(`${base_url}/${dataItem.ProductID}`, {
+    fetch(`${base_url}/${dataItem.customerId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     })
@@ -94,10 +94,10 @@ const App = () => {
   const cancel = (dataItem) => {
     console.log("Canceling changes for:", dataItem);
     const originalItem = data.data.find(
-      (p) => p.ProductID === dataItem.ProductID
+      (p) => p.customerId === dataItem.customerId
     );
     const newData = data.data.map((item) =>
-      item.ProductID === originalItem.ProductID ? originalItem : item
+      item.customerId === originalItem.customerId ? originalItem : item
     );
     setData((prev) => ({ ...prev, data: newData }));
   };
@@ -106,7 +106,7 @@ const App = () => {
     setData((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
-        item.ProductID === dataItem.ProductID ? { ...item, inEdit: true } : item
+        item.customerId === dataItem.customerId ? { ...item, inEdit: true } : item
       ),
     }));
   };
@@ -115,7 +115,7 @@ const App = () => {
     setData((prev) => ({
       ...prev,
       data: prev.data.map((item) =>
-        item.ProductID === event.dataItem.ProductID
+        item.customerId === event.dataItem.customerId
           ? { ...item, [event.field || ""]: event.value }
           : item
       ),
@@ -124,7 +124,7 @@ const App = () => {
   const addNew = () => {
     console.log("Adding new item.");
     const newDataItem = {
-      ProductID: new Date().getTime(),
+      customerId: new Date().getTime(),
       inEdit: true,
       Discontinued: false,
     };
