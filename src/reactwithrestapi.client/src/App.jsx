@@ -28,7 +28,13 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((responseBody) => {
-        const { data: responseData = [], total = 0 } = responseBody || {};
+          const { data: responseData = [], total = 0 } = responseBody || {};
+          console.log("Hi", responseData);
+          responseData.forEach((item) => {
+              var dob = item.dateOfBirth.split(/\D+/);
+              item.dateOfBirth = new Date(dob[0], dob[1], dob[2]);
+              console.log(dob, item.dateOfBirth);
+          })
         setState((prev) => ({
           ...prev,
           data: responseData,
@@ -94,7 +100,7 @@ const App = () => {
 
   return (
     <Grid
-      style={{ height: "420px" }}
+      style={{ height: "420px", width: "700px" }}
       data={state.data}
       total={state.total}
       skip={state.dataState.skip}
@@ -117,12 +123,12 @@ const App = () => {
         </Button>
       </GridToolbar>
       <Column field="id" title="ID" editable={false} width="50px" />
-      <Column field="name" title="Name" editable={true}/>
-      <Column field="age" title="Age" editable={true} />
-      <Column field="dateOfBirth" title="DOB" editable={true} />
+          <Column field="name" title="Name" editable={true} width="200px" />
+          <Column field="age" title="Age" editable={true} width="100px" />
+          <Column field="dateOfBirth" title="Date of Birth" format="{0:d}" editable={true} width="180px" filter="date" />
       <Column
         cell={(props) => <MyCommandCell {...props} {...commandCellProps} />}
-        width="200px"
+        width="150px"
       />
     </Grid>
   );
