@@ -21,7 +21,7 @@ const CommandCell = props => {
 
 const App = () => {
     const [data, setData] = React.useState([]);
-    const base_url = 'https://localhost:7241/api/customers';
+    const base_url = 'http://10.248.7.184:8181/api/Customers?page=0&pageSize=0&skip=0&take=20';
 
     React.useEffect(() => {
         // Original demo code
