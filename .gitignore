@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+
+# Database files
+src/ReactWithRestApi.Server/Sales.db-wal
+src/ReactWithRestApi.Server/Sales.db-shm
+src/ReactWithRestApi.Server/Sales/*.db

@@ -1,6 +1,7 @@
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReactWithRestApi.Server.Models;
 
 namespace ReactWithRestApi.Server.Controllers;
@@ -8,53 +9,100 @@ namespace ReactWithRestApi.Server.Controllers;
 // IMPORTANT: To recreate what I did here for your SQL server's context follow this tutorial https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&tabs=visual-studio
 // That shows you how to make the connection to the SQL server using EntityFramework Core.
 //
-// Once that is working, now you can focus on the Kendo topics. Everything until now was generic .NET programming.
-// the modifications you do are to change the signature of the methods to:
-// A - accept the Kendo Grid's DataSourceRequest
-// B - return the Kendo Grid's DataSourceResult
+// Once that is working, now you can focus on the Kendo topics:
+// A - accept the Kendo Grid's DataSourceRequest in each method
+// B - return the Kendo Grid's DataSourceResult from each method
 // This is what I have done below.
 
 [ApiController]
 [Route("api/[controller]")]
-public class CustomersController(LanceDbContext dbContext) : ControllerBase
+public class CustomersController(SalesDbContext dbContext) : ControllerBase
 {
     // GET: api/customers
     [HttpGet]
-    public async Task<JsonResult> GetCustomers([DataSourceRequest] DataSourceRequest request)
+    public async Task<IActionResult> GetCustomers([DataSourceRequest] DataSourceRequest request)
     {
-        // The special trick is that you can take advantage of the Telerik UI for ASP.NET Core's DataSourceRequest and DataSourceResult
-        // it internally knows how to handle the sorting, paging and other important things that are needed to communicate the right dat aback to the front end.
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            return new JsonResult(await CreateResponse(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    // POST: api/customers
     [HttpPost]
-    public async Task<JsonResult> AddCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    public async Task<IActionResult> AddCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Add(customer);
-        
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            await dbContext.AddAsync(customer);
+
+            await dbContext.SaveChangesAsync();
+
+            return new JsonResult(await CreateResponse(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    // PUT: api/customers
-    [HttpPut]
-    public async Task<JsonResult> UpdateCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Update(customer);
+        try
+        {
+            var originalItem = await dbContext.FindAsync<CustomerEntity>(customer.Id);
 
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+            if (originalItem != null)
+            {
+                dbContext.Entry(originalItem).State = EntityState.Detached;
+
+                dbContext.Update(customer);
+ 
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new JsonResult(await CreateResponse(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    // DELETE: api/customers
-    [HttpDelete]
-    public async Task<JsonResult> DeleteCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
-        dbContext.Customers.Remove(customer);
-        
-        var result = await dbContext.Customers.ToDataSourceResultAsync(request);
-        return new JsonResult(result);
+        try
+        {
+            var originalItem = await dbContext.FindAsync<CustomerEntity>(customer.Id);
+
+            if(originalItem == null)
+            {
+                dbContext.Remove(customer);
+
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new JsonResult(await CreateResponse(request));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    private async Task<DataSourceResult> CreateResponse(DataSourceRequest request)
+    {
+        // Uses ToDataSourceResultAsync to format the response to what the Kendo Grid is expecting (contains sorting, filtering, page and grouping information).
+        // The DataSourceRequest object is passed in from the Kendo Grid and contains the information about the current state of the grid.
+        // The ToDataSourceResultAsync method is an extension method that automatically converts the IQueryable to a DataSourceResult object.
+        // The DataSourceResponse object is what the Kendo Grid is expecting to receive back from the REST API.
+        var currentPageOfCustomers = await dbContext.Customers.ToDataSourceResultAsync(request);
+
+        return currentPageOfCustomers;
     }
 }
