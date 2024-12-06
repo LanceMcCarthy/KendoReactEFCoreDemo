@@ -32,7 +32,6 @@ public class CustomersController(SalesDbContext dbContext) : ControllerBase
         }
     }
 
-    // POST: api/customers
     [HttpPost]
     public async Task<IActionResult> AddCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
@@ -50,8 +49,7 @@ public class CustomersController(SalesDbContext dbContext) : ControllerBase
         }
     }
 
-    // PUT: api/customers
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
         try
@@ -75,8 +73,7 @@ public class CustomersController(SalesDbContext dbContext) : ControllerBase
         }
     }
 
-    // DELETE: api/customers
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCustomer([DataSourceRequest] DataSourceRequest request, CustomerEntity customer)
     {
         try
